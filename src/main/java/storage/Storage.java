@@ -22,12 +22,14 @@ public abstract class Storage {
 
     /**
      * REST endpoint for file handling
+     *
      * @return endpoint url
      */
     public abstract String getEndpoint();
 
     /**
      * List all the file names in storage
+     *
      * @return list of filenames
      */
     public List<String> listFiles() throws StorageException {
@@ -51,6 +53,7 @@ public abstract class Storage {
 
     /**
      * Download a file from storage
+     *
      * @param fileName file name
      * @return FileInfo with information about downloaded file
      */
@@ -71,6 +74,7 @@ public abstract class Storage {
 
     /**
      * Delete file from storage by name
+     *
      * @param fileName file name
      */
     public void deleteFile(String fileName) throws StorageException {
