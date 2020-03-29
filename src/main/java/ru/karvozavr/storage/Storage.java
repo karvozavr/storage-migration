@@ -1,17 +1,16 @@
-package storage;
+package ru.karvozavr.storage;
 
-import data.FileInfo;
+import org.apache.http.HttpStatus;
+import ru.karvozavr.data.FileData;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.json.JSONArray;
-import storage.util.HttpUtils;
-import storage.util.StorageException;
+import ru.karvozavr.Utils;
+import ru.karvozavr.storage.util.StorageException;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,8 +34,11 @@ public abstract class Storage {
     public List<String> listFiles() throws StorageException {
         List<String> files = new ArrayList<>();
 
-        try (var httpClient = HttpUtils.createRetryHttpClient()) {
+        try (var httpClient = Utils.createRetryHttpClient()) {
             HttpResponse response = httpClient.execute(new HttpGet(getEndpoint()));
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                return null;
+            }
             String json = getJson(response);
             JSONArray filesJson = new JSONArray(json);
             filesJson.forEach(file -> files.add(file.toString()));
@@ -57,19 +59,21 @@ public abstract class Storage {
      * @param fileName file name
      * @return FileInfo with information about downloaded file
      */
-    public FileInfo getFile(String fileName) throws StorageException {
-        Path file;
+    public FileData getFile(String fileName) throws StorageException {
+        byte[] bytes;
 
-        try (var httpClient = HttpUtils.createRetryHttpClient()) {
+        try (var httpClient = Utils.createRetryHttpClient()) {
             HttpResponse response = httpClient.execute(new HttpGet(getEndpoint() + "/" + fileName));
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                return null;
+            }
             var stream = response.getEntity().getContent();
-            file = Files.createTempFile(fileName, ".tmp");
-            Files.copy(stream, file);
+            bytes = stream.readAllBytes();
         } catch (IOException e) {
-            throw new StorageException("List request failed", e);
+            throw new StorageException("Get file request failed", e);
         }
 
-        return new FileInfo(fileName, file);
+        return new FileData(fileName, bytes);
     }
 
     /**
@@ -77,11 +81,16 @@ public abstract class Storage {
      *
      * @param fileName file name
      */
-    public void deleteFile(String fileName) throws StorageException {
-        try (var httpClient = HttpUtils.createRetryHttpClient()) {
+    public boolean deleteFile(String fileName) throws StorageException {
+        try (var httpClient = Utils.createRetryHttpClient()) {
             HttpResponse response = httpClient.execute(new HttpDelete(getEndpoint() + "/" + fileName));
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                return false;
+            }
         } catch (IOException e) {
             throw new StorageException("List request failed", e);
         }
+
+        return true;
     }
 }

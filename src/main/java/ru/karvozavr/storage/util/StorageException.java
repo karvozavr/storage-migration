@@ -1,4 +1,4 @@
-package storage.util;
+package ru.karvozavr.storage.util;
 
 public class StorageException extends Exception {
 
