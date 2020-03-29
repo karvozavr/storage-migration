@@ -1,4 +1,5 @@
-# storage-migration
+# storage-migration 
+![Java CI with Maven](https://github.com/karvozavr/storage-migration/workflows/Java%20CI%20with%20Maven/badge.svg)
 
 ## Build and execution
 
