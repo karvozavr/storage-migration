@@ -1,13 +1,13 @@
 package ru.karvozavr.storage;
 
 import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import ru.karvozavr.Config;
-import ru.karvozavr.data.FileData;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
 import ru.karvozavr.Utils;
+import ru.karvozavr.data.FileData;
 import ru.karvozavr.storage.util.StorageException;
 
 import java.io.IOException;

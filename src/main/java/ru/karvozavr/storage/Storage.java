@@ -1,12 +1,12 @@
 package ru.karvozavr.storage;
 
-import org.apache.http.HttpStatus;
-import ru.karvozavr.data.FileData;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.json.JSONArray;
 import ru.karvozavr.Utils;
+import ru.karvozavr.data.FileData;
 import ru.karvozavr.storage.util.StorageException;
 
 import java.io.IOException;
